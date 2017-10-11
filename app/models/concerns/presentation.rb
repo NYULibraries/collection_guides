@@ -62,6 +62,14 @@ module Presentation
     end
 
 
+    # Convenience method that allows has_descendant_digital_objects_with_files to be called on a Resource via the Presenter
+    def has_descendant_digital_objects_with_files
+      if @record.class == Resource
+        @record.has_descendant_digital_objects_with_files
+      end
+    end
+
+
     # Convenience method that allows id_tree to be called on a Resource via the Presenter
     def id_tree
       if @record.class == Resource

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170405204728) do
+ActiveRecord::Schema.define(version: 20171010210428) do
 
   create_table "agent_associations", force: :cascade do |t|
     t.integer  "record_id",   limit: 4
@@ -102,6 +102,7 @@ ActiveRecord::Schema.define(version: 20170405204728) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean  "show_thumbnails"
+    t.boolean  "has_files"
   end
 
   add_index "digital_objects", ["uri"], name: "index_digital_objects_on_uri", using: :btree

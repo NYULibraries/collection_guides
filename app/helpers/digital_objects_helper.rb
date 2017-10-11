@@ -19,6 +19,7 @@ module DigitalObjectsHelper
     output = ''
 
     if (!thumbnail_enabled_for_digital_object(digital_object))
+
       if !digital_object[:digital_object_volumes].blank?
 
         # filesystem_browse_link = Proc.new do |url|
@@ -51,6 +52,7 @@ module DigitalObjectsHelper
         label ||= 'Digital content'
         output = link_to(label, url, class: 'external')
       end
+
     end
     output
   end
@@ -118,20 +120,20 @@ module DigitalObjectsHelper
 
   def resource_digital_object_link
     output = ''
-    standard_label = "Portions of this collection have been digitized and made available in the Libraries' Rare and Unique Digital Collections site."
+    online_label = "Portions of this collection have been digitized and made available in the Libraries' Rare and Unique Digital Collections site."
     if @presenter
       if @presenter.digital_objects
         if @presenter.digital_objects.length == 1
-          output << digital_object_link_single(@presenter.digital_objects.first, standard_label)
+          output << digital_object_link_single(@presenter.digital_objects.first, online_label)
         elsif @presenter.digital_objects.length > 1
-          output << digital_object_link_multi(@presenter.digital_objects, standard_label)
+          output << digital_object_link_multi(@presenter.digital_objects, online_label)
         end
-      elsif @presenter.has_descendant_digital_objects
-        # output << link_to(standard_label, sal_collection_url(@presenter.collection_id), class: 'external')
+      elsif @presenter.has_descendant_digital_objects_with_files
+        # output << link_to(online_label, sal_collection_url(@presenter.collection_id), class: 'external')
         if @presenter.alt_digital_object_url
-          output << link_to(standard_label, @presenter.alt_digital_object_url, class: 'external')
+          output << link_to(online_label, @presenter.alt_digital_object_url, class: 'external')
         else
-          output << standard_label
+          output << online_label
         end
       end
     end
