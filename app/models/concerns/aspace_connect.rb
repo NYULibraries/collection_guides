@@ -107,7 +107,7 @@ module AspaceConnect
     # Params:
     # +options+:: Options passed from another method to be passed downstream (may include an active API session)
     def update_from_api(options={})
-      session = options[:session] || ArchivesSpaceApiUtility::ArchivesSpaceSession.new
+      session = options[:session] || ArchivesSpaceApiUtility::ArchivesSpaceSession.new      
       retries = 0
 
       execute = Proc.new do

@@ -1,0 +1,100 @@
+o.order_type.name != 'reproduction'
+config = o.states_events_config
+config.reject { |x| x[:to_state] == :in_progress }
+o = Order.find 1508
+o.states_events_config
+o = Order.find 1540
+o.order_fees_total
+rake users:ldap_attributes[mrnutt]
+rake users:ldap_record[mrnutt]
+rake users:ldap_record["mrnutt"]
+rake users:unity_create[mrnutt]
+OrderSubType.where(id: 13).pluck(:name)
+OrderSubType.where(id: 13).limit(1).pluck(:name)
+OrderSubType.where(id: 13).pluck(:name)[0]
+OrderSubType.name_from_id(13)
+Rails.env
+YAML.load_file('config/archivesspace.yml')
+ENV.update YAML.load_file('config/archivesspace.yml')[Rails.env] rescue {}
+ENV
+Item.add_archivesspace_top_container_uri
+Item.add_archivesspace_top_container_uris
+Item.create_or_update_from_archivesspace('/repositories/2/archival_objects/3003')
+include SecureRandom
+require 'securerandom.rb'
+SecureRandom.hex(10)
+SecureRandom.hex(8)
+SecureRandom.hex(6)
+SecureRandom.new
+SecureRandom.base64
+SecureRandom.base64(10)
+User.all
+o = Order.find 1624
+o = Order.find 16
+o.clone_order_ids
+i.versions.first
+v = i.versions.first
+v.item
+v = i.versions.current
+v = i.current_version
+v = i.version
+i.versions
+i.versions.to_a
+i.versions.to_a.first
+i.versions.to_a.first.reify
+i.versions.to_a.first.
+i.versions.each { |v| puts v.reify }
+i.versions.each { |v| puts v.reify.inspect }
+Item.where('id > 1600')
+i.versions.each { |v| puts v.reify.inspect;puts }
+i.versions[0]
+i.inspect
+i.cuurent_version
+i.current_version
+i.versions.each { |v| puts v.event }
+i.versions.each { |v| puts v.index }
+i.versions[0].reify
+puts i.versions[0].reify
+i.versions.each { |v| puts v.inspect; puts v.reify.inspect }
+i.versions.each { |v| puts v.inspect; puts; puts v.reify.inspect; puts }
+i.paper_trail.previous_version
+i1 = i.paper_trail.previous_version
+i2 = i1.paper_trail.previous_version
+i3 = i2.paper_trail.previous_version
+i4 = i3.paper_trail.previous_version
+i5 = i4.paper_trail.previous_version
+i.version
+i.paper_trail.originiator
+i.paper_trail.originator
+User.find i.paper_trail.originator.to_i
+i.modification_history
+i.modification_history.each { |h| puts h.inspect; puts }
+i = Item.find 6419
+i = Item.first
+i.versions.length
+0 > 0.0
+0 == 0.0
+x = 0.0
+x == 0
+i = Item.find 7849
+i = Itemorder.find 7849
+i = ItemOrder.find 7849
+i.order_fee
+"0".to_f
+rails s
+pwd
+puts ENV.inspect
+require CGI
+require 'cgi'
+include CGI
+CGI.unescapeHTML("hello")
+CGI.unescapeHTML("Brian%20D")
+require 'uri'
+URI.decode("Brian%20D")
+archivesspace_solr_url()
+archivesspace_solr_url
+include AspaceUtilities
+archivesspace_backend_url
+ao = ArchivalObject.first
+ao.update_from_api
+ENV.clear

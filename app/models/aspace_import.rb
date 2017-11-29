@@ -2,6 +2,7 @@ class AspaceImport < ActiveRecord::Base
 
   require 'modules/general_utilities.rb'
   include GeneralUtilities
+  include AspaceUtilities
 
   # Import all records from ArchivesSpace
   def self.execute_full(options={})
@@ -414,7 +415,7 @@ class AspaceImport < ActiveRecord::Base
 
 
   def self.execute_query(query, params={})
-    solr_url = "http://#{ENV['archivesspace_host']}:#{ENV['archivesspace_solr_port']}#{ENV['archivesspace_solr_path']}"
+    solr_url = archivesspace_solr_url()
     @solr = RSolr.connect :url => solr_url
     @solr_params = {:q => query }
     @solr_params.merge! params
