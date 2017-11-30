@@ -20,7 +20,7 @@ class DigitalObject < ActiveRecord::Base
   has_many :subject_associations, -> { order('position ASC') }, as: :record, dependent: :destroy
   has_many :subjects, through: :subject_associations
 
-  after_save :update_has_files
+  after_create :update_has_files
 
   @@uri_format = /^\/repositories\/[\d]+\/digital\_objects\/[\d]+$/
 
@@ -57,15 +57,19 @@ class DigitalObject < ActiveRecord::Base
   def update_from_data(data,options={})
     d = prepare_data(data)
     r, json = d[:hash], d[:json]
-    attributes = {}
-    attributes[:api_response] = json
-    ['title','publish','digital_object_id'].each { |x| attributes[x.to_sym] = r[x] }
-    update_attributes(attributes)
+    atts = {}
+    atts[:api_response] = json
+    ['title','publish','digital_object_id'].each { |x| atts[x.to_sym] = r[x] }
+    update_attributes(atts)
+    update_has_files
+
     # add/update agents and associations
     update_associated_agents_from_data(r['linked_agents'])
+
     # add/update agents and associations
     update_associated_subjects_from_data(r['subjects'])
     reload
+
     self
   end
 

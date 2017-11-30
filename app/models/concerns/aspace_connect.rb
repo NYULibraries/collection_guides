@@ -5,6 +5,7 @@ module AspaceConnect
 
   included do
     require 'archivesspace-api-utility/helpers'
+    include GeneralUtilities
     include AspaceUtilities
     include ArchivesSpaceApiUtility
     include ArchivesSpaceApiUtility::Helpers
@@ -38,23 +39,21 @@ module AspaceConnect
       uri = r['uri']
       record = where(uri: uri).first
       if record
-        puts "#{uri} exists. Updating from response data"
         record.update_from_data(data,options)
       else
-        puts "Creating new record from response data for #{uri}"
         record = create_from_data(data,options)
       end
+
       record.reload
       record
     end
 
 
     def self.get_data_from_api(uri, options={})
-      resolve_linked_records = options[:resolve_linked_records] || true
       session = options[:session] || ArchivesSpaceApiUtility::ArchivesSpaceSession.new
 
       execute = Proc.new do
-        response = resolve_linked_records ? session.get(uri, resolve: ['linked_agents','subjects']) : session.get(uri)
+        response = session.get(uri, resolve: ['linked_agents','subjects','top_container'])
         if response.code.to_i == 200
           data = prepare_data(response.body)
           return (options[:format] == :json) ? data[:json] : data[:hash]
@@ -76,12 +75,11 @@ module AspaceConnect
     # +uri+:: An ArchivesSpace URI associated with a single record
     # +options+:: Options passed from another method to be passed downstream
     def self.create_record_from_api(uri, options={})
-      resolve_linked_records = options[:resolve_linked_records] || true
       session = options[:session] || ArchivesSpaceApiUtility::ArchivesSpaceSession.new
       retries = 0
 
       execute = Proc.new do
-        response = resolve_linked_records ? session.get(uri, resolve: ['linked_agents','subjects']) : session.get(uri)
+        response = session.get(uri, resolve: ['linked_agents','subjects','top_container'])
         if response.code.to_i == 200
           create_from_data(response.body,options)
         elsif response.code.to_i == 412
@@ -107,11 +105,11 @@ module AspaceConnect
     # Params:
     # +options+:: Options passed from another method to be passed downstream (may include an active API session)
     def update_from_api(options={})
-      session = options[:session] || ArchivesSpaceApiUtility::ArchivesSpaceSession.new      
+      session = options[:session] || ArchivesSpaceApiUtility::ArchivesSpaceSession.new
       retries = 0
 
       execute = Proc.new do
-        response = session.get(self.uri, resolve: ['linked_agents','subjects'])
+        response = session.get(self.uri, resolve: ['linked_agents','subjects','top_container'])
         if response.code.to_i == 200
           self.update_from_data(response.body,options)
         elsif response.code.to_i == 412

@@ -165,7 +165,6 @@ module Associations
       old_associations = associations.to_a
       p = 0
 
-
       ## MARKED FOR DELETION
       #
       # has_file_uri = lambda do |data|
@@ -188,8 +187,8 @@ module Associations
         if i['instance_type'] == 'digital_object'
 
           if i['digital_object'] && i['digital_object']['ref']
-            api_data = DigitalObject.get_data_from_api(i['digital_object']['ref'],options)
 
+            api_data = DigitalObject.get_data_from_api(i['digital_object']['ref'],options)
 
             digital_object = DigitalObject.create_or_update_from_data(api_data, options)
             match_attributes = { digital_object_id: digital_object.id }

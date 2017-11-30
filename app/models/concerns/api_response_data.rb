@@ -82,63 +82,49 @@ module ApiResponseData
         end
       end
 
-      if has_agents
-        @data[:agents] = []
+      add_agents_to_unit_data()
+      # if has_agents
+      #   @data[:agents] = []
+      #
+      #   # avoid duplicates by storing agent display names in array and checking against it before processing
+      #   # using display names rather than ids because the same agent might appear with different subdivisions
+      #   display_names = []
+      #
+      #   agent_associations.each do |aa|
+      #     a = aa.agent
+      #     extension = ''
+      #
+      #     if !aa.terms.blank?
+      #       JSON.parse(aa.terms).each do |t|
+      #         if !t['term'].blank?
+      #           extension << " -- #{t['term']}"
+      #         end
+      #       end
+      #     end
+      #
+      #     display_name = a.display_name + extension
+      #
+      #     if !display_names.include? display_name
+      #       display_names << display_name
+      #       agent_data = {
+      #         id: a.id,
+      #         uri: a.uri,
+      #         # display_name: a.display_name,
+      #         display_name: escape_ampersands(display_name),
+      #         agent_type: a.agent_type,
+      #         role: aa.role,
+      #         relator: aa.relator
+      #       }
+      #       relator_data = marc_relators(aa.relator)
+      #       agent_data[:relator_term] = relator_data[:label]
+      #       agent_data[:relator_uri] = relator_data[:uri]
+      #       @data[:agents] << agent_data
+      #     end
+      #   end
+      # end
 
-        # avoid duplicates by storing agent display names in array and checking against it before processing
-        # using display names rather than ids because the same agent might appear with different subdivisions
-        display_names = []
 
-        agent_associations.each do |aa|
-          a = aa.agent
-          extension = ''
-
-          if !aa.terms.blank?
-            JSON.parse(aa.terms).each do |t|
-              if !t['term'].blank?
-                extension << " -- #{t['term']}"
-              end
-            end
-          end
-
-          display_name = a.display_name + extension
-
-          if !display_names.include? display_name
-            display_names << display_name
-            agent_data = {
-              id: a.id,
-              uri: a.uri,
-              # display_name: a.display_name,
-              display_name: escape_ampersands(display_name),
-              agent_type: a.agent_type,
-              role: aa.role,
-              relator: aa.relator
-            }
-            relator_data = marc_relators(aa.relator)
-            agent_data[:relator_term] = relator_data[:label]
-            agent_data[:relator_uri] = relator_data[:uri]
-            @data[:agents] << agent_data
-          end
-        end
-      end
-
-      if response_data['instances']
-        response_data['instances'].each do |i|
-          containers = []
-          if i['container']
-            (1..3).each do |x|
-              type = i['container']["type_#{x.to_s}"]
-              indicator = i['container']["indicator_#{x.to_s}"]
-              if type
-                container = container_type_labels(type);
-                container += indicator ? " #{indicator}" : ''
-                containers << container
-              end
-            end
-            (@data[:containers] ||= []) << containers.join(', ')
-          end
-        end
-      end
+      add_instances_to_unit_data(response_data)
 
       if has_digital_objects
         @data[:digital_objects] = []
@@ -162,8 +148,93 @@ module ApiResponseData
   end
 
 
+
+
+
+
+
+
   # Included to enable custom additions to update_unit_data()
   def update_unit_data_custom
+  end
+
+
+  private
+
+
+  def add_agents_to_unit_data
+    if has_agents
+      @data[:agents] = []
+
+      # avoid duplicates by storing agent display names in array and checking against it before processing
+      # using display names rather than ids because the same agent might appear with different subdivisions
+      display_names = []
+
+      agent_associations.each do |aa|
+        a = aa.agent
+        extension = ''
+
+        if !aa.terms.blank?
+          JSON.parse(aa.terms).each do |t|
+            if !t['term'].blank?
+              extension << " -- #{t['term']}"
+            end
+          end
+        end
+
+        display_name = a.display_name + extension
+
+        if !display_names.include? display_name
+          display_names << display_name
+          agent_data = {
+            id: a.id,
+            uri: a.uri,
+            # display_name: a.display_name,
+            display_name: escape_ampersands(display_name),
+            agent_type: a.agent_type,
+            role: aa.role,
+            relator: aa.relator
+          }
+          relator_data = marc_relators(aa.relator)
+          agent_data[:relator_term] = relator_data[:label]
+          agent_data[:relator_uri] = relator_data[:uri]
+          @data[:agents] << agent_data
+        end
+      end
+    end
+  end
+
+
+  def add_instances_to_unit_data(response_data)
+    container_string = lambda do |type,indicator|
+      container = container_type_labels(type);
+      container += indicator ? " #{indicator}" : ''
+      return container
+    end
+
+    if response_data['instances']
+      response_data['instances'].each do |i|
+        containers = []
+        sub_c = i['sub_container']
+        if sub_c
+          if sub_c['top_container'] && sub_c['top_container']['_resolved']
+            type = sub_c['top_container']['_resolved']['type']
+            indicator = sub_c['top_container']['_resolved']['indicator']
+            containers << container_string.(type,indicator)
+          end
+
+          [2,3].each do |x|
+            type = sub_c["type_#{x.to_s}"]
+            indicator = sub_c["indicator_#{x.to_s}"]
+            if type
+              containers << container_string.(type,indicator)
+            end
+          end
+
+          (@data[:containers] ||= []) << containers.join(', ')
+        end
+      end
+    end
   end
 
 
