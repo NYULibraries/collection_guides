@@ -10,10 +10,9 @@ class CreateRepositories < ActiveRecord::Migration
       t.column(:api_response, 'longtext')
       t.timestamps
     end
-    execute "ALTER TABLE `repositories` ADD PRIMARY KEY(id)"
     add_index :repositories, :repo_code
   end
-  
+
   def down
     drop_table :repositories
   end

@@ -10,7 +10,6 @@ class CreateDigitalObjects < ActiveRecord::Migration
       t.column(:api_response, 'longtext')
       t.timestamps
     end
-    execute "ALTER TABLE `digital_objects` ADD PRIMARY KEY(id)"
     add_index :digital_objects, :uri
   end
 

@@ -1,40 +1,89 @@
-# ArchivesSpace Public (finding aids)
+# Collection guides
 
-A Ruby on Rails application for presenting archival finding aids that uses data imported from ArchivesSpace. Used for [NCSU Libraries Special Collections Research Center Collection Guides](http://www.lib.ncsu.edu/findingaids/). Search across finding aids is provided via Apache Solr.
+A Ruby on Rails application for presenting archival finding aids that uses data
+imported from ArchivesSpace. Used for [NCSU Libraries Special Collections Research Center Collection Guides](http://www.lib.ncsu.edu/findingaids/). Search across finding aids is
+provided via Apache Solr.
 
 ## Requirements
 
-* Ruby 4.1 or higher
-* Apache Solr 4 or higher
+* Ruby 2.4.1 or higher
+* Apache Solr 5 or 6
 * Cron (for scheduled updates of data from ArchivesSpace)
+
+## Installation
+
+To begin:
+
+1. Clone or download/unzip this repo
+2. `cd` into the local collection_guides directory (the one you just cloned)
+
+### Select and configure database
+
+#### To use SQLite (for development only)
+Locate the file `config/database_example_sqlite.yml` and save a copy as
+`config/database.yml`.
+
+#### To use MySQL
+
+> NOTE: Using MySQL requires other MySQL components to already be available on your system.
+
+1. Locate the file `config/database_example_mysql.yml` and save a copy as
+`config/database.yml`. Update the information in this file as needed.
+For more information see
+http://edgeguides.rubyonrails.org/configuring.html#configuring-a-database
+
+2. In `Gemfile`, uncomment this line before proceeding:
+
+   `# gem 'mysql2'`
+
+### Basic setup
+
+1. Run `bundle install` to install gems (requires Bundler - `gem install bundler`)
+2. Run `bundle exec rake collection_guides:generate_secrets` to generate the
+Rails secret\_key_base.
+
+### Set up database
+
+Run this to create the database:
+
+`rake db:setup`
+
+### Create Solr core
+
+To use search features, a Solr core must be available. The `solr_conf` directory
+contains Solr configuration files.
+These have only beed tested on Solr versions 5 and 6 and may not work on Solr 7.
+
+#### TODO:
+
+* Solr 7 config
+* expanded documentation
 
 ## Configuration
 
-Configuration files containing sensitive information are required but not included in this repository for security. These files need to be created manually.
-
-### config/database.yml
-
-Provide your database configuration options. You can use database_example.yml as a template. For more information see http://edgeguides.rubyonrails.org/configuring.html#configuring-a-database
+Configuration files containing sensitive information are required but not
+included in this repository for security. These files need to be created manually.
 
 ### config/application.yml
-Provide information needed to connect to the Solr index and to ArchivesSpace. You can use application_example.yml as a template.
+
+Provide information needed to connect to the Solr index and to ArchivesSpace.
+You can use `application_example.yml` as a template.
 
 Configuration options (all required unless specified) include:
-* `solr_host`: Your Solr host (e.g. 'solr.myinstitution.org', without the 'http://' protocol segment included)
+* `solr_host`: Your Solr host (e.g. 'solr.myinstitution.org', without the
+'http://' protocol segment included)
 * `solr_port`: The port number on which your Solr instance is running (required)
-* `solr_core_path`: If you are running a multi-core instance of Solr, provide the path to your core (with leading and trailing slashes - e.g. '/solr/aspace_public/')
+* `solr_core_path`: If you are running a multi-core instance of Solr,
+provide the path to your core (with leading and trailing slashes - e.g. '/solr/aspace_public/')
 * `archivesspace_host`: The hostname for your ArchivesSpace instance, used for communication between DAEV and ArchivesSpace (localhost if running on the same server as the application)
 * `archivesspace_url_host`: The hostname for your ArchivesSpace instance (e.g. 'archivesspace.myinstitution.org', without the 'http://' protocol segment included), used for generating links to the records in the ArchivesSpace front end
-* `archivesspace_port`: Your ArchivesSpace backend port (8089 by default)
-* `archivesspace_frontend_port`: Your ArchivesSpace frontend port (8080 by default)
-* `archivesspace_solr_port`: Your ArchivesSpace Solr port (8090 by default)
-* `archivesspace_solr_path`: path the the Solr core used by ArchivesSpace (by default this is '/collection1/')
+* `archivesspace_port`: Your ArchivesSpace backend port (ArchivesSpace default is **8089**)
+* `archivesspace_frontend_port`: Your ArchivesSpace frontend port (ArchivesSpace default is **8080**)
+* `archivesspace_solr_port`: Your ArchivesSpace Solr port (ArchivesSpace default is **8090**)
+* `archivesspace_solr_path`: path the the Solr core used by ArchivesSpace (ArchivesSpace default is **'/collection1/'**)
 * `archivesspace_username`: Username for an ArchivesSpace admin user
-* `archivesspace_password`: Password associated with archivesspace\_username
+* `archivesspace_password`: Password associated with *archivesspace\_username*
 * `archivesspace_https`: Set to true to force communication with ArchivesSpace over HTTPS (OPTIONAL - defaults to false)
-
-### config/secrets.yml
-`secret_key_base` values for each environment. See http://guides.rubyonrails.org/4_1_release_notes.html#config-secrets-yml
 
 ## Functionality highlights
 
@@ -55,7 +104,7 @@ The Solr index includes both `Resource` (collection) records and `ArchivalObject
 
 The search results use Solr's [Result Grouping](https://cwiki.apache.org/confluence/display/solr/Result+Grouping) feature to aggregate component-level results with their parent collection in order to provide appropriate context.
 
-The application uses the [RSolr](https://github.com/rsolr/rsolr) Ruby client for Apache Solr for all interactions with the Solr index. Solr configuration files are available in this repository for both Solr 4 (in `solr_4_conf`) and 5 (in `solr_conf`).
+The application uses the [RSolr](https://github.com/rsolr/rsolr) Ruby client for Apache Solr for all interactions with the Solr index. Solr configuration files are available in this repository in `solr_conf`.
 
 ### Finding aid presentation
 

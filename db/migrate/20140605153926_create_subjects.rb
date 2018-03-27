@@ -1,5 +1,5 @@
 class CreateSubjects < ActiveRecord::Migration
-  
+
   def up
     create_table(:subjects, :id => false) do |t|
       t.integer :id, :null => false
@@ -11,7 +11,6 @@ class CreateSubjects < ActiveRecord::Migration
       t.column(:api_response, 'longtext')
       t.timestamps
     end
-    execute "ALTER TABLE `subjects` ADD PRIMARY KEY(id)"
     add_index :subjects, :uri
     add_index :subjects, :subject_type
   end

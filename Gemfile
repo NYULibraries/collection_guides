@@ -6,7 +6,10 @@ gem 'rails', '~> 4.2.8'
 gem "sprockets", ">=2.11.3"
 
 # Use mysql as the database for Active Record
-gem 'mysql2'
+# gem 'mysql2'
+
+# Use SQLite for development
+gem 'sqlite3'
 
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 5.0.0'
@@ -29,7 +32,7 @@ gem 'jquery-rails', '~>4.0.4'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', '~> 1.2'
 
-gem 'archivesspace-api-utility', :git => "git@github.com:trevorthornton/archivesspace-api-utility.git"
+gem 'archivesspace-api-utility', :git => "https://github.com/NCSU-Libraries/archivesspace-api-utility.git"
 
 
 gem 'compass-rails', '>= 2.0.2'
@@ -42,12 +45,15 @@ gem 'ncsul_web', git: 'git@github.ncsu.edu:ncsu-libraries/ncsul_web-rails.git'
 gem 'rsolr'
 gem 'will_paginate'
 gem 'foundation-will_paginate'
-gem 'nokogiri', '~> 1.6.7.1'
+gem 'nokogiri'
 gem 'truncate_html'
 gem 'chronic'
 gem 'newrelic_rpm'
 
 gem 'whenever', :require => false
+
+# security vulnerabilities in loofah <2.2.1
+gem 'loofah', '~> 2.2.1'
 
 group :doc do
   # bundle exec rake doc:rails generates the API under doc/api.
@@ -58,12 +64,11 @@ group :development, :test do
   gem 'thin'
   gem 'guard-livereload'
   gem 'quiet_assets'
-
   gem 'annotate'
 
   # For testing
   gem 'rspec-rails', '>= 3.3.0'
-  gem 'factory_girl_rails', "~> 4.0"
+  gem 'factory_bot_rails'
   gem 'database_cleaner', ">= 1.0.0"
 
   # Capistrano and friends

@@ -14,7 +14,6 @@ class CreateArchivalObjects < ActiveRecord::Migration
       t.column(:api_response, 'longtext')
       t.timestamps
     end
-    execute "ALTER TABLE `archival_objects` ADD PRIMARY KEY(id)"
     add_index :archival_objects, :uri
     add_index :archival_objects, :parent_id
     add_index :archival_objects, :resource_id

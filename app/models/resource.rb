@@ -126,16 +126,11 @@ class Resource < ActiveRecord::Base
 
             child_record = ArchivalObject.where(id: child['id']).first
 
-            begin
-              if child_record
-                child_record.update_from_api(options)
-              else
-                child_record = ArchivalObject.create_from_api(child['record_uri'], options)
-              end
-            rescue Exception => e
-              log_info e
+            if child_record
+              child_record.update_from_api(options)
+            else
+              child_record = ArchivalObject.create_from_api(child['record_uri'], options)
             end
-
 
             # Update parent_id here because it is not included in individual responses per archival_object
             child_record.update_attributes(parent_id: parent_id)
