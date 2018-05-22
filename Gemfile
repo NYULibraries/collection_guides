@@ -6,10 +6,10 @@ gem 'rails', '~> 4.2.8'
 gem "sprockets", ">=2.11.3"
 
 # Use mysql as the database for Active Record
-# gem 'mysql2'
+gem 'mysql2'
 
 # Use SQLite for development
-gem 'sqlite3'
+# gem 'sqlite3'
 
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 5.0.0'
