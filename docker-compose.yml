@@ -1,0 +1,22 @@
+version: '3.2'
+services:
+
+  collection_guides:
+    build: .
+    environment:
+      COLLECTION_GUIDES_DB_PASSWORD: 'collection_guides_db_password'
+
+  db:
+    image: library/mysql:8
+    environment:
+      MYSQL_ROOT_PASSWORD: 'changeme!'
+      MYSQL_DATABASE: 'collection_guides_db_dev'
+      MYSQL_USER: 'collection_guides_db_user'
+      MYSQL_PASSWORD: 'collection_guides_db_password'
+
+  solr:
+    build:
+      context: .
+      dockerfile: Dockerfile.solr
+    entrypoint: "docker-entrypoint.sh"
+    command: "solr-foreground"

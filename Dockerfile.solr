@@ -1,0 +1,8 @@
+FROM solr:6-alpine
+
+ADD solr_coonf/ /tmp/conf
+
+RUN /opt/solr/bin/solr start && \
+    /opt/solr/bin/solr create_core -c collection_guides -d /tmp/conf && \
+    /opt/solr/bin/solr create_core -c collection_guides_test -d /tmp/conf && \
+    /opt/solr/bin/solr stop
