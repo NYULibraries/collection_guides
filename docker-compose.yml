@@ -5,14 +5,12 @@ services:
     build: .
     environment:
       COLLECTION_GUIDES_DB_PASSWORD: 'collection_guides_db_password'
+    command: "tail -f /dev/null"
 
   db:
-    image: library/mysql:8
+    image: library/mysql:5
     environment:
-      MYSQL_ROOT_PASSWORD: 'changeme!'
-      MYSQL_DATABASE: 'collection_guides_db_dev'
-      MYSQL_USER: 'collection_guides_db_user'
-      MYSQL_PASSWORD: 'collection_guides_db_password'
+      MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
 
   solr:
     build:

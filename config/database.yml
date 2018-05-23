@@ -9,13 +9,13 @@
 # And be sure to use new-style password hashing:
 #   http://dev.mysql.com/doc/refman/5.0/en/old-client.html
 #
-default:
+default: &default
   adapter: mysql2
   encoding: utf8
   pool: 5
   timeout: 5000
-  username: collection_guides_db_user
-  password: <%= ENV['COLLECTION_GUIDES_DB_PASSWORD'] %>
+  username: root
+  password: ''
   host: db
 
 development:
