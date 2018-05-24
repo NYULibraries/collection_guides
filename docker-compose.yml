@@ -3,6 +3,8 @@ services:
 
   collection_guides:
     build: .
+    ports:
+      - "3000:3000"
     environment:
       COLLECTION_GUIDES_DB_PASSWORD: 'collection_guides_db_password'
     command: "tail -f /dev/null"
